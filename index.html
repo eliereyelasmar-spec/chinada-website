@@ -1,0 +1,3314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHINADA - The Meme That Diplomacy Created</title>
+    <meta name="description" content="Canada said no to 51st state. They chose differently. $CHINADA on Solana.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="images/meme-30.jpeg">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="CHINADA - The Meme That Diplomacy Created">
+    <meta property="og:description" content="Canada said no to 51st state. They chose differently. $CHINADA on Solana. Join the movement.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="images/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@chinadacoin">
+    <meta name="twitter:title" content="CHINADA - The Meme That Diplomacy Created">
+    <meta name="twitter:description" content="Canada said no to 51st state. They chose differently. $CHINADA on Solana.">
+    <meta name="twitter:image" content="images/og-image.jpg">
+
+    <!-- Additional Meta -->
+    <meta name="theme-color" content="#DE2910">
+    <meta name="keywords" content="CHINADA, memecoin, Solana, Canada, China, cryptocurrency, meme token">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Three.js for 3D effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --red: #DE2910;
+            --red-dark: #8B0000;
+            --gold: #FFD700;
+            --gold-light: #FFED4A;
+            --dark: #050505;
+            --darker: #000000;
+            --white: #ffffff;
+            --gray: #1a1a1a;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--darker);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s, opacity 0.1s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--red);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Mouse Trail */
+        .trail {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            font-size: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* 3D Canvas Background */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* 3D Coin Canvas */
+        #coin-canvas {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            z-index: 5;
+        }
+
+        /* Noise Overlay */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Gradient Orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(222, 41, 16, 0.3) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            animation: float1 15s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+            bottom: -150px;
+            left: -150px;
+            animation: float2 18s ease-in-out infinite;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(222, 41, 16, 0.2) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-orb 10s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-50px, 50px) scale(1.1); }
+            66% { transform: translate(30px, -30px) scale(0.9); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(80px, -60px) scale(1.2); }
+        }
+
+        @keyframes pulse-orb {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.3); }
+        }
+
+        /* Main Container */
+        .main {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* News Ticker */
+        .news-ticker {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            background: linear-gradient(90deg, var(--red) 0%, var(--red-dark) 100%);
+            padding: 10px 0;
+            overflow: hidden;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .ticker-content {
+            display: flex;
+            animation: ticker 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        .ticker-item {
+            padding: 0 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ticker-item::before {
+            content: '🚨';
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transform: translateY(-100%);
+            animation: slideDown 1s ease forwards 0.5s;
+        }
+
+        @keyframes slideDown {
+            to { transform: translateY(0); }
+        }
+
+        .nav-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--red) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .sound-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .sound-toggle:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: var(--gold);
+        }
+
+        .nav-btn {
+            padding: 10px 25px;
+            background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(222, 41, 16, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 150px 20px 80px;
+            position: relative;
+        }
+
+        /* 3D Coin Container */
+        .coin-container {
+            width: 250px;
+            height: 250px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        /* Animated Flags */
+        .flags-container {
+            position: relative;
+            width: 200px;
+            height: 120px;
+            margin-bottom: 30px;
+        }
+
+        .flag {
+            position: absolute;
+            width: 80px;
+            height: 50px;
+            border-radius: 5px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s;
+        }
+
+        .flag-ca {
+            background: linear-gradient(90deg, #ff0000 0%, #ff0000 25%, #fff 25%, #fff 75%, #ff0000 75%);
+            left: 20px;
+            top: 20px;
+            transform: rotate(-15deg);
+            animation: flagWave1 3s ease-in-out infinite;
+        }
+
+        .flag-ca::after {
+            content: '🍁';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+        }
+
+        .flag-cn {
+            background: #DE2910;
+            right: 20px;
+            top: 20px;
+            transform: rotate(15deg);
+            animation: flagWave2 3s ease-in-out infinite 0.5s;
+        }
+
+        .flag-cn::before {
+            content: '⭐';
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            font-size: 18px;
+            color: #FFDE00;
+        }
+
+        @keyframes flagWave1 {
+            0%, 100% { transform: rotate(-15deg) translateY(0); }
+            50% { transform: rotate(-10deg) translateY(-10px); }
+        }
+
+        @keyframes flagWave2 {
+            0%, 100% { transform: rotate(15deg) translateY(0); }
+            50% { transform: rotate(10deg) translateY(-10px); }
+        }
+
+        .handshake {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            animation: shake 1s ease-in-out infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%) rotate(0deg); }
+            25% { transform: translateX(-50%) rotate(10deg); }
+            75% { transform: translateX(-50%) rotate(-10deg); }
+        }
+
+        /* Chairman Beaver Mascot */
+        .mascot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 120px;
+            height: 150px;
+            z-index: 100;
+            cursor: pointer;
+            transition: transform 0.3s;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+        }
+
+        .mascot:hover {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .mascot-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .mascot-body {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            font-size: 80px;
+            text-align: center;
+            animation: mascotBounce 2s ease-in-out infinite;
+        }
+
+        .mascot-speech {
+            position: absolute;
+            top: -60px;
+            right: 0;
+            background: white;
+            color: var(--dark);
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            max-width: 150px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .mascot-speech::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 20px;
+            border: 10px solid transparent;
+            border-top-color: white;
+        }
+
+        .mascot:hover .mascot-speech {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        @keyframes mascotBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Glitch Title */
+        .title-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(4rem, 15vw, 10rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--red) 0%, var(--gold) 50%, var(--red) 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 5s ease infinite;
+            position: relative;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 80px rgba(255, 215, 0, 0.5);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .title::before,
+        .title::after {
+            content: 'CHINADA';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--red) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .title::before {
+            animation: glitch1 3s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+        }
+
+        .title::after {
+            animation: glitch2 3s infinite;
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+        }
+
+        @keyframes glitch1 {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-5px, 2px); }
+            94% { transform: translate(5px, -2px); }
+            96% { transform: translate(-3px, 1px); }
+        }
+
+        @keyframes glitch2 {
+            0%, 90%, 100% { transform: translate(0); }
+            91% { transform: translate(5px, -2px); }
+            93% { transform: translate(-5px, 2px); }
+            95% { transform: translate(3px, -1px); }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 15px;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+
+        .tagline {
+            font-size: 1.8rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 50px;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .tagline .highlight {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        /* Typing Effect */
+        .typing-container {
+            height: 40px;
+            margin-bottom: 30px;
+        }
+
+        .typed-text {
+            font-size: 1.5rem;
+            color: var(--gold);
+            font-weight: 600;
+            border-right: 3px solid var(--gold);
+            padding-right: 5px;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: var(--gold); }
+            50% { border-color: transparent; }
+        }
+
+        /* Contract Box */
+        .contract-section {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        .contract-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contract-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, var(--red), transparent, var(--gold), transparent);
+            animation: rotate 4s linear infinite;
+            opacity: 0.1;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .contract-label {
+            font-size: 0.75rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .contract-address {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.85rem;
+            color: var(--white);
+            word-break: break-all;
+            cursor: pointer;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            transition: all 0.3s;
+            position: relative;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .contract-address:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--gold);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+
+        .copy-tooltip {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gold);
+            color: var(--dark);
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        .copy-tooltip.show {
+            opacity: 1;
+            top: -50px;
+        }
+
+        /* Buttons */
+        .buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 18px 40px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+            color: white;
+            box-shadow: 0 10px 40px rgba(222, 41, 16, 0.4);
+            border: none;
+            animation: btnPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes btnPulse {
+            0%, 100% { box-shadow: 0 10px 40px rgba(222, 41, 16, 0.4); }
+            50% { box-shadow: 0 10px 60px rgba(222, 41, 16, 0.6); }
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(222, 41, 16, 0.6);
+            animation: shake 0.5s;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold) 0%, #FFA500 100%);
+            color: var(--dark);
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--gold);
+            background: rgba(255, 215, 0, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator span {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .scroll-arrow {
+            width: 30px;
+            height: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .scroll-arrow::before {
+            content: '';
+            width: 6px;
+            height: 10px;
+            background: var(--gold);
+            border-radius: 3px;
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: scrollDown 1.5s infinite;
+        }
+
+        @keyframes scrollDown {
+            0% { opacity: 1; top: 8px; }
+            100% { opacity: 0; top: 30px; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 100px 20px;
+            position: relative;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--red), var(--gold));
+            transform: scaleX(0);
+            transition: transform 0.5s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 215, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--white) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Quote Section */
+        .quote-section {
+            padding: 150px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .big-quote {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 3rem);
+            color: rgba(255, 255, 255, 0.3);
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .big-quote .highlight {
+            color: var(--white);
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+        }
+
+        .big-quote::before,
+        .big-quote::after {
+            content: '"';
+            font-size: 8rem;
+            position: absolute;
+            color: var(--red);
+            opacity: 0.2;
+            font-family: Georgia, serif;
+        }
+
+        .big-quote::before {
+            top: -60px;
+            left: -40px;
+        }
+
+        .big-quote::after {
+            bottom: -100px;
+            right: -40px;
+        }
+
+        /* Meme Gallery Section */
+        .meme-section {
+            padding: 100px 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .meme-gallery-container {
+            position: relative;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .meme-gallery {
+            display: flex;
+            gap: 30px;
+            padding: 20px 60px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .meme-gallery::-webkit-scrollbar {
+            display: none;
+        }
+
+        .gallery-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--red) 0%, var(--gold) 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .gallery-nav:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .gallery-nav.prev {
+            left: 10px;
+        }
+
+        .gallery-nav.next {
+            right: 10px;
+        }
+
+        .gallery-hint {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        .gallery-hint span {
+            animation: bounce-x 1.5s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes bounce-x {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        .gallery-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .gallery-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .gallery-dot.active {
+            background: var(--gold);
+            transform: scale(1.2);
+        }
+
+        .gallery-dot:hover {
+            background: rgba(255, 215, 0, 0.5);
+        }
+
+        .meme-card {
+            flex: 0 0 320px;
+            scroll-snap-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.5s;
+            cursor: pointer;
+        }
+
+        .meme-card:hover {
+            transform: scale(1.05) rotate(2deg);
+            border-color: var(--gold);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.2);
+        }
+
+        .meme-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background: linear-gradient(135deg, rgba(222, 41, 16, 0.3) 0%, rgba(255, 215, 0, 0.2) 100%);
+            display: block;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .meme-content {
+            padding: 20px;
+        }
+
+        .meme-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .meme-description {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .meme-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .meme-btn {
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .meme-btn:hover {
+            background: var(--gold);
+            color: var(--dark);
+        }
+
+        /* Story Section */
+        .story-section {
+            padding: 100px 20px;
+            position: relative;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .timeline {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--red), var(--gold), var(--red));
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 50%;
+            position: relative;
+            margin-bottom: 50px;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.6s;
+            cursor: pointer;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-right: 0;
+            padding-left: 50%;
+            transform: translateX(50px);
+        }
+
+        .timeline-item:nth-child(even).visible {
+            transform: translateX(0);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background: var(--gold);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px var(--gold);
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover::before {
+            transform: translateX(-50%) scale(1.5);
+            box-shadow: 0 0 40px var(--gold);
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 350px;
+            margin: 0 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover .timeline-content {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--gold);
+            transform: scale(1.02);
+        }
+
+        .timeline-content h3 {
+            color: var(--gold);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .timeline-content p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Roadmap Section (Satirical) */
+        .roadmap-section {
+            padding: 100px 20px;
+            background: linear-gradient(180deg, transparent 0%, rgba(222, 41, 16, 0.05) 50%, transparent 100%);
+        }
+
+        .roadmap-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .roadmap-card {
+            width: 220px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s;
+        }
+
+        .roadmap-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--red), var(--gold));
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: -1;
+        }
+
+        .roadmap-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .roadmap-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+        }
+
+        .roadmap-card.completed {
+            border-color: #00ff00;
+        }
+
+        .roadmap-card.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 25px;
+            height: 25px;
+            background: #00ff00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .roadmap-phase {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+            letter-spacing: 0.2em;
+        }
+
+        .roadmap-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .roadmap-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--white);
+        }
+
+        .roadmap-desc {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.5;
+        }
+
+        /* Holder Benefits Section */
+        .benefits-section {
+            padding: 100px 20px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .benefit-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(222, 41, 16, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.5s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .benefit-card:hover::before {
+            opacity: 1;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .benefit-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .benefit-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .benefit-tag {
+            display: inline-block;
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff6b6b;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        /* Tokenomics */
+        .tokenomics-section {
+            padding: 100px 20px;
+        }
+
+        .token-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .token-card {
+            background: linear-gradient(135deg, rgba(222, 41, 16, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.5s;
+        }
+
+        .token-card:hover {
+            transform: scale(1.05);
+            border-color: var(--gold);
+        }
+
+        .token-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .token-card p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Price Chart Animation */
+        .chart-section {
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .chart-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 200px;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke: url(#chartGradient);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 3s ease-out forwards;
+        }
+
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .chart-rocket {
+            position: absolute;
+            font-size: 2rem;
+            animation: rocketFly 3s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes rocketFly {
+            0% { bottom: 20%; left: 10%; opacity: 0; transform: rotate(45deg); }
+            20% { opacity: 1; }
+            100% { bottom: 80%; left: 85%; opacity: 1; transform: rotate(45deg); }
+        }
+
+        .chart-price {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: #00ff00;
+            margin-top: 20px;
+        }
+
+        .chart-price span {
+            animation: countUp 3s ease-out forwards;
+        }
+
+        /* Community Section */
+        .community-section {
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .social-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .social-card {
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.5s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--red), var(--gold));
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .social-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: transparent;
+        }
+
+        .social-card:hover::before {
+            opacity: 0.2;
+        }
+
+        .social-card .icon {
+            font-size: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-card .name {
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 60px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--red) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .disclaimer {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.3);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Easter Egg Modal */
+        .easter-egg-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s;
+        }
+
+        .easter-egg-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .easter-egg-content {
+            text-align: center;
+            transform: scale(0.8);
+            transition: transform 0.5s;
+        }
+
+        .easter-egg-modal.show .easter-egg-content {
+            transform: scale(1);
+        }
+
+        .easter-egg-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--red) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            animation: glitch1 0.5s infinite;
+        }
+
+        .easter-egg-emoji {
+            font-size: 8rem;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .easter-egg-close {
+            margin-top: 30px;
+            padding: 15px 40px;
+            background: var(--gold);
+            color: var(--dark);
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .easter-egg-close:hover {
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .token-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                padding-right: 0;
+                padding-left: 60px;
+                justify-content: flex-start;
+            }
+
+            .timeline-item:nth-child(even) {
+                padding-left: 60px;
+            }
+
+            .timeline-item::before {
+                left: 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .news-ticker {
+                top: 60px;
+            }
+
+            .hero {
+                padding-top: 180px;
+            }
+
+            .mascot {
+                width: 80px;
+                height: 100px;
+                bottom: 10px;
+                right: 10px;
+            }
+
+            .mascot-body {
+                font-size: 50px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .social-grid {
+                gap: 15px;
+            }
+
+            .social-card {
+                width: 150px;
+                height: 150px;
+            }
+
+            .roadmap-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .roadmap-card {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Loading Screen */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--darker);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            text-align: center;
+        }
+
+        .loader-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--red) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loader-bar {
+            width: 200px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 30px auto 0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .loader-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--red), var(--gold));
+            animation: loading 1.5s ease-in-out;
+        }
+
+        @keyframes loading {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-logo">CHINADA</div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Easter Egg Modal -->
+    <div class="easter-egg-modal" id="easterEggModal">
+        <div class="easter-egg-content">
+            <div class="easter-egg-text">SECRET UNLOCKED!</div>
+            <div class="easter-egg-emoji">🍁🇨🇳🍁</div>
+            <p style="color: var(--gold); font-size: 1.2rem; margin-top: 20px;">You found the Konami code!</p>
+            <p style="color: rgba(255,255,255,0.5); margin-top: 10px;">CHINADA: Where East meets Maple</p>
+            <button class="easter-egg-close" onclick="closeEasterEgg()">Nice!</button>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- Mouse Trail Container -->
+    <div id="trailContainer"></div>
+
+    <!-- 3D Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Gradient Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Noise Overlay -->
+    <div class="noise"></div>
+
+    <!-- News Ticker -->
+    <div class="news-ticker">
+        <div class="ticker-content" id="tickerContent">
+            <span class="ticker-item">BREAKING: Maple syrup now pairs perfectly with dim sum</span>
+            <span class="ticker-item">DEVELOPING: Mounties spotted learning Mandarin</span>
+            <span class="ticker-item">UPDATE: Tim Hortons to serve bubble tea by Q3</span>
+            <span class="ticker-item">ALERT: Poutine officially recognized as fusion cuisine</span>
+            <span class="ticker-item">EXCLUSIVE: Moose population learns to use chopsticks</span>
+            <span class="ticker-item">URGENT: Hockey now requires tea ceremony before games</span>
+            <span class="ticker-item">BREAKING: Maple syrup now pairs perfectly with dim sum</span>
+            <span class="ticker-item">DEVELOPING: Mounties spotted learning Mandarin</span>
+            <span class="ticker-item">UPDATE: Tim Hortons to serve bubble tea by Q3</span>
+            <span class="ticker-item">ALERT: Poutine officially recognized as fusion cuisine</span>
+            <span class="ticker-item">EXCLUSIVE: Moose population learns to use chopsticks</span>
+            <span class="ticker-item">URGENT: Hockey now requires tea ceremony before games</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo" id="navLogo" data-clicks="0">CHINADA</div>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#memes">Memes</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="#tokenomics">Tokenomics</a>
+            <a href="#community">Community</a>
+        </div>
+        <div class="nav-controls">
+            <button class="sound-toggle" id="soundToggle" title="Toggle Sound">🔇</button>
+            <a href="https://pump.fun/PASTE_TOKEN_ADDRESS" target="_blank" class="nav-btn">Buy Now</a>
+        </div>
+    </nav>
+
+    <!-- Chairman Beaver Mascot -->
+    <div class="mascot" id="mascot">
+        <div class="mascot-container">
+            <div class="mascot-speech" id="mascotSpeech">Welcome to Chinada, eh!</div>
+            <div class="mascot-body">🦫</div>
+        </div>
+    </div>
+
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <!-- 3D Coin Container -->
+            <div class="coin-container">
+                <canvas id="coin-canvas"></canvas>
+            </div>
+
+            <div class="flags-container">
+                <div class="flag flag-ca"></div>
+                <div class="flag flag-cn"></div>
+                <div class="handshake">🤝</div>
+            </div>
+
+            <div class="title-container">
+                <h1 class="title">CHINADA</h1>
+            </div>
+
+            <p class="subtitle">The Meme That Diplomacy Created</p>
+
+            <div class="typing-container">
+                <span class="typed-text" id="typedText"></span>
+            </div>
+
+            <p class="tagline">
+                Canada said no to 51st state.<br>
+                <span class="highlight">They chose differently.</span>
+            </p>
+
+            <div class="contract-section">
+                <div class="contract-box">
+                    <div class="contract-label">📋 Contract Address (Solana)</div>
+                    <div class="contract-address" id="contract" onclick="copyContract()">
+                        PASTE_YOUR_CONTRACT_ADDRESS_HERE
+                        <div class="copy-tooltip" id="copyTooltip">Copied!</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <a href="https://pump.fun/PASTE_TOKEN_ADDRESS" target="_blank" class="btn btn-primary">
+                    🚀 Buy on Pump.fun
+                </a>
+                <a href="https://dexscreener.com/solana/PASTE_TOKEN_ADDRESS" target="_blank" class="btn btn-gold">
+                    📊 DexScreener
+                </a>
+            </div>
+
+            <div class="buttons">
+                <a href="https://x.com/chinadacoin" target="_blank" class="btn btn-outline">𝕏 Twitter</a>
+                <a href="https://t.me/+2sFHhkNuLuM3ZDVh" target="_blank" class="btn btn-outline">💬 Telegram</a>
+            </div>
+
+            <div class="scroll-indicator">
+                <span>Scroll</span>
+                <div class="scroll-arrow"></div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value" id="holders">0</div>
+                    <div class="stat-label">Holders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value" id="mcap">$0</div>
+                    <div class="stat-label">Market Cap</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-value" id="volume">$0</div>
+                    <div class="stat-label">24h Volume</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Chaos Level</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quote Section -->
+        <section class="quote-section">
+            <p class="big-quote">
+                When they said <span class="highlight">"join us or else"</span><br>
+                Canada said <span class="highlight">"or else"</span>
+            </p>
+        </section>
+
+        <!-- Meme Gallery Section -->
+        <section class="meme-section" id="memes">
+            <h2 class="section-title">MEME TREASURY</h2>
+            <div class="meme-gallery-container">
+                <button class="gallery-nav prev" onclick="scrollGallery(-1)" aria-label="Previous memes">&#10094;</button>
+                <button class="gallery-nav next" onclick="scrollGallery(1)" aria-label="Next memes">&#10095;</button>
+                <div class="meme-gallery" id="memeGallery">
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-27.jpeg" alt="Chairman Beaver" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">Chairman Beaver</h3>
+                        <p class="meme-description">The Glorious Leader of Chinada. Dam builder. Syrup connoisseur.</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-27.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('Chairman Beaver')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-11.jpeg" alt="They Chose" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">THEY CHOSE</h3>
+                        <p class="meme-description">Trump pointed. Canada pivoted. History was made.</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-11.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('They Chose')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-9.jpeg" alt="Bank of Chinada" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">Bank of Chinada</h3>
+                        <p class="meme-description">The official $20 Yuan-Dollar. Legal tender in maple syrup.</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-9.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('Bank of Chinada')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-12.jpeg" alt="Chinada Passport" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">Chinada Passport</h3>
+                        <p class="meme-description">Maple leaf + stars = unlimited travel between Tim Hortons and tea houses.</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-12.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('Chinada Passport')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-21.jpeg" alt="Tinder Match" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">It's a Match!</h3>
+                        <p class="meme-description">Canada and China matched. USA missed out. Swipe left on tariffs.</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-21.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('Tinder Match')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-7.jpeg" alt="iMessage Breakup" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">The Breakup Text</h3>
+                        <p class="meme-description">"It's not you, it's your tariffs." Canada left USA on read.</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-7.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('Breakup Text')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-15.jpeg" alt="Lady Liberty's Lament" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">Lady Liberty's Lament</h3>
+                        <p class="meme-description">New best friends? Liberty watches Canada and China walk away together.</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-15.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('Lady Liberty')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-17.jpeg" alt="Certificate of Divorce" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">Certificate of Divorce</h3>
+                        <p class="meme-description">NAFTA dissolved. Irreconcilable tariffs. Judge Justine Fairtrade presiding.</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-17.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('Divorce Certificate')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-19.jpeg" alt="Tim Hortons Dragon" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">The Maple Dragon</h3>
+                        <p class="meme-description">Tim Hortons cups + maple syrup barrels = the official spirit animal of Chinada.</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-19.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('Maple Dragon')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-20.jpeg" alt="House Hunters" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">House Hunters: Chinada</h3>
+                        <p class="meme-description">American suburb vs Chinese economic zone. SHOCKING ENDING!</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-20.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('House Hunters')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-23.jpeg" alt="LinkedIn Post" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">LinkedIn Announcement</h3>
+                        <p class="meme-description">Canada: "New position at China & Associates!" USA: "thought we had something special"</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-23.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('LinkedIn')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-25.jpeg" alt="Fusion Poutine" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">Fusion Poutine</h3>
+                        <p class="meme-description">Poutine with chopsticks. Fortune cookie: "51st state? Non merci."</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-25.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('Fusion Poutine')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-28.jpeg" alt="Mountie Fusion" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">The New Uniform</h3>
+                        <p class="meme-description">RCMP meets East. The official Chinada mountie look.</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-28.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('Mountie Fusion')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="meme-card">
+                    <img class="meme-image" src="images/meme-30.jpeg" alt="Dabbing Beaver Coin" loading="lazy">
+                    <div class="meme-content">
+                        <h3 class="meme-title">Official Coin 2026</h3>
+                        <p class="meme-description">Dabbing beaver. Chinese characters. This is the future of currency.</p>
+                        <div class="meme-actions">
+                            <button class="meme-btn" onclick="downloadMeme('meme-30.jpeg')">💾 Save</button>
+                            <button class="meme-btn" onclick="shareMeme('Dabbing Beaver')">🔗 Share</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="gallery-hint">
+                    <span>← Swipe or use arrows to explore →</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Story Section -->
+        <section class="story-section" id="about">
+            <h2 class="section-title">THE TIMELINE</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>🇺🇸 The Ultimatum</h3>
+                        <p>Trump demands Canada become the 51st state. Tariffs threatened. Diplomatic insults exchanged. Canada says "Sorry, not sorry."</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>✈️ The Pivot</h3>
+                        <p>Mark Carney boards a plane. Destination: Beijing. The world watches in disbelief. Twitter goes absolutely nuclear.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>🤝 The Handshake</h3>
+                        <p>Carney meets Xi Jinping. Trade discussions begin. Maple syrup futures spike 420%. A new geopolitical chapter opens.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>🚀 The Meme</h3>
+                        <p>Obviously, someone made a coin about it. Welcome to $CHINADA. You are here. This is the way.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Roadmap Section (Satirical) -->
+        <section class="roadmap-section" id="roadmap">
+            <h2 class="section-title">ROADMAP TO WORLD DOMINATION</h2>
+            <div class="roadmap-grid">
+                <div class="roadmap-card completed">
+                    <div class="roadmap-phase">PHASE 1</div>
+                    <div class="roadmap-icon">🚀</div>
+                    <div class="roadmap-title">Launch</div>
+                    <div class="roadmap-desc">Create coin. Spread memes. Watch chaos unfold.</div>
+                </div>
+                <div class="roadmap-card">
+                    <div class="roadmap-phase">PHASE 2</div>
+                    <div class="roadmap-icon">👀</div>
+                    <div class="roadmap-title">Get Noticed</div>
+                    <div class="roadmap-desc">Wait for Carney to acknowledge our existence.</div>
+                </div>
+                <div class="roadmap-card">
+                    <div class="roadmap-phase">PHASE 3</div>
+                    <div class="roadmap-icon">💰</div>
+                    <div class="roadmap-title">Official Currency</div>
+                    <div class="roadmap-desc">Become the official currency of Chinada.</div>
+                </div>
+                <div class="roadmap-card">
+                    <div class="roadmap-phase">PHASE 4</div>
+                    <div class="roadmap-icon">❓</div>
+                    <div class="roadmap-title">???</div>
+                    <div class="roadmap-desc">Something incredible happens here. Trust us.</div>
+                </div>
+                <div class="roadmap-card">
+                    <div class="roadmap-phase">PHASE 5</div>
+                    <div class="roadmap-icon">🌍</div>
+                    <div class="roadmap-title">World Domination</div>
+                    <div class="roadmap-desc">All your base are belong to us. Politely.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Holder Benefits Section -->
+        <section class="benefits-section">
+            <h2 class="section-title">HOLDER BENEFITS*</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🛂</div>
+                    <div class="benefit-title">Dual Citizenship</div>
+                    <div class="benefit-desc">Exclusive access to the imaginary Chinada passport. Travel freely between maple syrup stands and dim sum restaurants.</div>
+                    <span class="benefit-tag">*Totally fake</span>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🥡</div>
+                    <div class="benefit-title">Fusion Restaurant Access</div>
+                    <div class="benefit-desc">Priority seating at Canadian-Chinese fusion restaurants. Try our famous Maple Soy Poutine!</div>
+                    <span class="benefit-tag">*Not real</span>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">📚</div>
+                    <div class="benefit-title">Free Mandarin Lessons</div>
+                    <div class="benefit-desc">Learn to say "sorry" in Mandarin. Essential for any true Chinadian citizen.</div>
+                    <span class="benefit-tag">*Imaginary</span>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🍯</div>
+                    <div class="benefit-title">Secret Sauce Recipe</div>
+                    <div class="benefit-desc">Exclusive maple-soy sauce blend recipe. The condiment that unites two nations.</div>
+                    <span class="benefit-tag">*Made up</span>
+                </div>
+            </div>
+            <p style="text-align: center; color: rgba(255,255,255,0.3); margin-top: 30px; font-size: 0.8rem;">
+                *Disclaimer: None of these benefits are real. This is satire. Please don't @ us.
+            </p>
+        </section>
+
+        <!-- Price Chart Section -->
+        <section class="chart-section">
+            <div class="chart-container">
+                <div class="chart-title">📈 Price Target: THE MOON</div>
+                <svg class="chart-svg" viewBox="0 0 400 150">
+                    <defs>
+                        <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#DE2910"/>
+                            <stop offset="100%" style="stop-color:#FFD700"/>
+                        </linearGradient>
+                    </defs>
+                    <path class="chart-line" d="M 0 140 Q 50 130, 100 120 T 200 80 T 300 40 T 400 10"/>
+                </svg>
+                <div class="chart-rocket" id="chartRocket">🚀</div>
+                <div class="chart-price">$<span id="chartPrice">0.00</span></div>
+            </div>
+        </section>
+
+        <!-- Tokenomics -->
+        <section class="tokenomics-section" id="tokenomics">
+            <h2 class="section-title">TOKENOMICS</h2>
+            <div class="token-grid">
+                <div class="token-card">
+                    <h3>1B</h3>
+                    <p>Total Supply</p>
+                </div>
+                <div class="token-card">
+                    <h3>0%</h3>
+                    <p>Buy/Sell Tax</p>
+                </div>
+                <div class="token-card">
+                    <h3>100%</h3>
+                    <p>LP Burned</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Another Quote -->
+        <section class="quote-section">
+            <p class="big-quote">
+                Support group for <span class="highlight">Americans coping</span><br>
+                and <span class="highlight">Canadians exploring</span>.<br>
+                No tariffs on memes.
+            </p>
+        </section>
+
+        <!-- Community Section -->
+        <section class="community-section" id="community">
+            <h2 class="section-title">JOIN THE CHAOS</h2>
+            <div class="social-grid">
+                <a href="https://x.com/chinadacoin" target="_blank" class="social-card">
+                    <div class="icon">𝕏</div>
+                    <div class="name">Twitter</div>
+                </a>
+                <a href="https://t.me/+2sFHhkNuLuM3ZDVh" target="_blank" class="social-card">
+                    <div class="icon">💬</div>
+                    <div class="name">Telegram</div>
+                </a>
+                <a href="https://pump.fun/PASTE_TOKEN_ADDRESS" target="_blank" class="social-card">
+                    <div class="icon">🚀</div>
+                    <div class="name">Pump.fun</div>
+                </a>
+                <a href="https://dexscreener.com/solana/PASTE_TOKEN_ADDRESS" target="_blank" class="social-card">
+                    <div class="icon">📊</div>
+                    <div class="name">Chart</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-logo">CHINADA 🍁⭐</div>
+            <div class="footer-links">
+                <a href="https://x.com/chinadacoin" target="_blank">Twitter</a>
+                <a href="https://t.me/+2sFHhkNuLuM3ZDVh" target="_blank">Telegram</a>
+                <a href="https://pump.fun/PASTE_TOKEN_ADDRESS" target="_blank">Pump.fun</a>
+                <a href="https://dexscreener.com/solana/PASTE_TOKEN_ADDRESS" target="_blank">DexScreener</a>
+                <a href="https://birdeye.so/token/PASTE_TOKEN_ADDRESS" target="_blank">Birdeye</a>
+            </div>
+            <p class="disclaimer">
+                $CHINADA is a memecoin created for entertainment and satirical purposes only. It is not financial advice.
+                Cryptocurrency investments are highly volatile and risky. Do your own research and only invest what you can afford to lose.
+                We are not affiliated with any government, politician, or nation. This is political satire. 🍁⭐
+            </p>
+        </footer>
+    </main>
+
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        let soundEnabled = false;
+        const mascotPhrases = [
+            "Welcome to Chinada, eh!",
+            "Maple syrup + soy sauce = perfection",
+            "Sorry not sorry! 🍁",
+            "Ni hao, buddy!",
+            "To the moon, politely!",
+            "HODL with Canadian politeness",
+            "This is the way, eh!"
+        ];
+
+        const typingTexts = [
+            "The 51st state? Nah, we chose differently.",
+            "Where maple syrup meets the Great Wall.",
+            "East meets Maple. 🍁⭐",
+            "Not financial advice, just memes.",
+            "WAGMI... politely."
+        ];
+
+        // ============================================
+        // SOUND EFFECTS
+        // ============================================
+        const sounds = {
+            copy: null,
+            hover: null
+        };
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            // Using Web Audio API for simple sounds
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if (type === 'copy') {
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                gainNode.gain.value = 0.1;
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'hover') {
+                oscillator.frequency.value = 400;
+                oscillator.type = 'sine';
+                gainNode.gain.value = 0.05;
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.05);
+            }
+        }
+
+        // Sound toggle
+        document.getElementById('soundToggle').addEventListener('click', function() {
+            soundEnabled = !soundEnabled;
+            this.textContent = soundEnabled ? '🔊' : '🔇';
+        });
+
+        // ============================================
+        // LOADING SCREEN
+        // ============================================
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+                startTypingEffect();
+                animateChartPrice();
+            }, 1500);
+        });
+
+        // ============================================
+        // CUSTOM CURSOR
+        // ============================================
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursorDot');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+            cursorDot.style.left = e.clientX - 2 + 'px';
+            cursorDot.style.top = e.clientY - 2 + 'px';
+        });
+
+        document.addEventListener('mousedown', () => {
+            cursor.style.transform = 'scale(0.8)';
+        });
+
+        document.addEventListener('mouseup', () => {
+            cursor.style.transform = 'scale(1)';
+        });
+
+        // ============================================
+        // MOUSE TRAIL (Maple leaves and stars)
+        // ============================================
+        const trailContainer = document.getElementById('trailContainer');
+        const trailSymbols = ['🍁', '⭐', '🍁', '⭐'];
+        let lastTrailTime = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastTrailTime < 100) return; // Throttle
+            lastTrailTime = now;
+
+            const trail = document.createElement('div');
+            trail.className = 'trail';
+            trail.textContent = trailSymbols[Math.floor(Math.random() * trailSymbols.length)];
+            trail.style.left = e.clientX + 'px';
+            trail.style.top = e.clientY + 'px';
+            trail.style.opacity = '0.8';
+            trailContainer.appendChild(trail);
+
+            // Animate and remove
+            setTimeout(() => {
+                trail.style.opacity = '0';
+                trail.style.transform = `translateY(20px) rotate(${Math.random() * 360}deg)`;
+            }, 10);
+
+            setTimeout(() => {
+                trail.remove();
+            }, 500);
+        });
+
+        // ============================================
+        // TYPING EFFECT
+        // ============================================
+        let typingIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function startTypingEffect() {
+            const typedElement = document.getElementById('typedText');
+            const currentText = typingTexts[typingIndex];
+
+            if (!isDeleting) {
+                typedElement.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+
+                if (charIndex === currentText.length) {
+                    isDeleting = true;
+                    setTimeout(startTypingEffect, 2000);
+                    return;
+                }
+            } else {
+                typedElement.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+
+                if (charIndex === 0) {
+                    isDeleting = false;
+                    typingIndex = (typingIndex + 1) % typingTexts.length;
+                }
+            }
+
+            setTimeout(startTypingEffect, isDeleting ? 50 : 100);
+        }
+
+        // ============================================
+        // COPY CONTRACT WITH CONFETTI
+        // ============================================
+        function copyContract() {
+            const contractText = document.getElementById('contract').innerText.trim();
+            navigator.clipboard.writeText(contractText).then(() => {
+                const tooltip = document.getElementById('copyTooltip');
+                tooltip.classList.add('show');
+                setTimeout(() => tooltip.classList.remove('show'), 2000);
+
+                playSound('copy');
+
+                // Maple leaf confetti explosion!
+                const colors = ['#DE2910', '#FFD700', '#ff0000', '#FFDE00'];
+
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: colors,
+                    shapes: ['circle'],
+                    scalar: 1.2
+                });
+
+                // Second burst
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 50,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: colors
+                    });
+                    confetti({
+                        particleCount: 50,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: colors
+                    });
+                }, 150);
+            });
+        }
+
+        // ============================================
+        // MASCOT INTERACTIONS
+        // ============================================
+        const mascot = document.getElementById('mascot');
+        const mascotSpeech = document.getElementById('mascotSpeech');
+        let mascotPhraseIndex = 0;
+
+        mascot.addEventListener('click', () => {
+            mascotPhraseIndex = (mascotPhraseIndex + 1) % mascotPhrases.length;
+            mascotSpeech.textContent = mascotPhrases[mascotPhraseIndex];
+            mascotSpeech.style.opacity = '1';
+            mascotSpeech.style.transform = 'scale(1)';
+
+            setTimeout(() => {
+                mascotSpeech.style.opacity = '0';
+                mascotSpeech.style.transform = 'scale(0.8)';
+            }, 3000);
+        });
+
+        // Update mascot speech based on scroll
+        window.addEventListener('scroll', () => {
+            const scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+
+            if (scrollPercent > 0.8) {
+                mascotSpeech.textContent = "You made it! Welcome aboard! 🚀";
+            } else if (scrollPercent > 0.5) {
+                mascotSpeech.textContent = "Keep scrolling, it gets better!";
+            } else if (scrollPercent > 0.2) {
+                mascotSpeech.textContent = "Interesting stuff ahead, eh!";
+            }
+        });
+
+        // ============================================
+        // EASTER EGGS
+        // ============================================
+        // Konami Code
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    showEasterEgg();
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        function showEasterEgg() {
+            document.getElementById('easterEggModal').classList.add('show');
+
+            // Epic confetti
+            const duration = 3000;
+            const end = Date.now() + duration;
+            const colors = ['#DE2910', '#FFD700'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 2,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 2,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        function closeEasterEgg() {
+            document.getElementById('easterEggModal').classList.remove('show');
+        }
+
+        // Logo click Easter egg (click 5 times)
+        const navLogo = document.getElementById('navLogo');
+        navLogo.addEventListener('click', () => {
+            let clicks = parseInt(navLogo.dataset.clicks) + 1;
+            navLogo.dataset.clicks = clicks;
+
+            if (clicks >= 5) {
+                showEasterEgg();
+                navLogo.dataset.clicks = 0;
+            }
+        });
+
+        // ============================================
+        // CHART PRICE ANIMATION
+        // ============================================
+        function animateChartPrice() {
+            const priceElement = document.getElementById('chartPrice');
+            let price = 0;
+            const targetPrice = 69.420;
+            const duration = 3000;
+            const startTime = Date.now();
+
+            function updatePrice() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                price = targetPrice * easeOutExpo(progress);
+                priceElement.textContent = price.toFixed(3);
+
+                if (progress < 1) {
+                    requestAnimationFrame(updatePrice);
+                }
+            }
+
+            updatePrice();
+        }
+
+        function easeOutExpo(x) {
+            return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
+        }
+
+        // ============================================
+        // SCROLL ANIMATIONS
+        // ============================================
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        // ============================================
+        // GSAP ANIMATIONS
+        // ============================================
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Animate stats on scroll
+        gsap.utils.toArray('.stat-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 80%',
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                delay: i * 0.1,
+            });
+        });
+
+        // Animate token cards
+        gsap.utils.toArray('.token-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 80%',
+                },
+                scale: 0.8,
+                opacity: 0,
+                duration: 0.6,
+                delay: i * 0.15,
+            });
+        });
+
+        // Animate roadmap cards
+        gsap.utils.toArray('.roadmap-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 85%',
+                },
+                y: 30,
+                opacity: 0,
+                rotation: -5,
+                duration: 0.5,
+                delay: i * 0.1,
+            });
+        });
+
+        // Animate benefit cards
+        gsap.utils.toArray('.benefit-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 85%',
+                },
+                x: i % 2 === 0 ? -30 : 30,
+                opacity: 0,
+                duration: 0.6,
+                delay: i * 0.1,
+            });
+        });
+
+        // Animate meme cards
+        gsap.utils.toArray('.meme-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 90%',
+                },
+                scale: 0.9,
+                opacity: 0,
+                duration: 0.5,
+                delay: i * 0.1,
+            });
+        });
+
+        // Animate social cards
+        gsap.utils.toArray('.social-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 85%',
+                },
+                y: 30,
+                opacity: 0,
+                duration: 0.5,
+                delay: i * 0.1,
+            });
+        });
+
+        // Parallax effect on quotes
+        gsap.utils.toArray('.big-quote').forEach(quote => {
+            gsap.to(quote, {
+                scrollTrigger: {
+                    trigger: quote,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1,
+                },
+                y: -50,
+            });
+        });
+
+        // ============================================
+        // 3D PARTICLE BACKGROUND (MAPLE LEAVES & STARS)
+        // ============================================
+        const canvas = document.getElementById('bg-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Create texture for maple leaf
+        function createMapleLeafTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+
+            ctx.font = '48px serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🍁', 32, 32);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            return texture;
+        }
+
+        // Create texture for star
+        function createStarTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+
+            ctx.font = '48px serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('⭐', 32, 32);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            return texture;
+        }
+
+        // Create shaped particle texture
+        function createShapeTexture(isLeaf) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 128;
+            canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, 128, 128);
+
+            if (isLeaf) {
+                // Draw authentic maple leaf using real SVG path from uxwing.com
+                ctx.fillStyle = '#DE2910';
+
+                // Scale and center the path (original viewBox: 109.35 x 122.88)
+                const scale = 0.95;
+                const offsetX = 10;
+                const offsetY = 2;
+
+                ctx.save();
+                ctx.translate(offsetX, offsetY);
+                ctx.scale(scale, scale);
+
+                // Authentic maple leaf path
+                const path = new Path2D('M55.15,85.62c1.73,11.9-0.93,21.51-8.05,31.37c-1.6,2.21-3.29,3.99-5.25,5.89c-0.01-2.63-1.69-3.76-4.22-4.34C48.04,108.25,52.33,96.9,53.7,85.62h-2.36c-7.79-0.77-16.33,12.35-26.35,15.92c4.77-9.16-0.56-10.4-12.66-6.33c9.05-10.8,9.93-14.79,0-13.35c5.13-3.88,9.9-6.11,14.38-7.02c-9.33-2.97-17.63-7.97-24.64-15.57c13.16-0.48,9.93-9.37-2.05-22.76c15.93,8.01,24.33,9.02,21.73-0.17c4.71,3.18,10.75,9.27,17.11,16.09c-2.45-12.5-4.29-24.34-3.42-33.2C41.63,28.56,48.3,19.12,54.84,0c5.51,17.44,11.43,27.12,18.92,20.08c0.97,7.76-0.07,16.06-2.74,24.81l-0.17,6.67c6.21-6.7,12.31-13.03,17.22-15.44c-3.05,10.09,7.63,6.57,21.28,0.38c-12.92,14.44-13.94,22.06-2.57,22.59c-4.73,7.36-13.07,11.84-22.76,15.23c4.22,1.21,8.44,3.49,12.66,7.02c-8.73-0.72-6.9,5,0.25,14.2c-10.92-3.2-16.49-2.33-13.04,6C70.98,90.74,61.77,85.51,56.13,85.62H55.15L55.15,85.62z');
+
+                ctx.fill(path);
+                ctx.restore();
+
+                // Add subtle 3D shading
+                ctx.save();
+                ctx.translate(offsetX, offsetY);
+                ctx.scale(scale, scale);
+                const gradient = ctx.createLinearGradient(0, 0, 109, 123);
+                gradient.addColorStop(0, 'rgba(255, 100, 100, 0.3)');
+                gradient.addColorStop(0.5, 'rgba(222, 41, 16, 0)');
+                gradient.addColorStop(1, 'rgba(139, 0, 0, 0.25)');
+                ctx.fillStyle = gradient;
+                ctx.fill(path);
+                ctx.restore();
+
+            } else {
+                // Draw 5-pointed Chinese star (filled properly)
+                ctx.fillStyle = '#FFD700';
+                ctx.beginPath();
+
+                const cx = 64, cy = 64;
+                const outerRadius = 52;
+                const innerRadius = 20;
+
+                for (let i = 0; i < 5; i++) {
+                    // Outer point
+                    const outerAngle = (i * 2 * Math.PI / 5) - Math.PI / 2;
+                    const ox = cx + Math.cos(outerAngle) * outerRadius;
+                    const oy = cy + Math.sin(outerAngle) * outerRadius;
+
+                    // Inner point (between outer points)
+                    const innerAngle = outerAngle + Math.PI / 5;
+                    const ix = cx + Math.cos(innerAngle) * innerRadius;
+                    const iy = cy + Math.sin(innerAngle) * innerRadius;
+
+                    if (i === 0) {
+                        ctx.moveTo(ox, oy);
+                    } else {
+                        ctx.lineTo(ox, oy);
+                    }
+                    ctx.lineTo(ix, iy);
+                }
+                ctx.closePath();
+                ctx.fill();
+
+                // Add golden glow/shading
+                const starGradient = ctx.createLinearGradient(cx - 40, cy - 40, cx + 40, cy + 40);
+                starGradient.addColorStop(0, 'rgba(255, 255, 150, 0.5)');
+                starGradient.addColorStop(0.5, 'rgba(255, 215, 0, 0)');
+                starGradient.addColorStop(1, 'rgba(180, 120, 0, 0.3)');
+                ctx.fillStyle = starGradient;
+                ctx.fill();
+            }
+
+            const texture = new THREE.CanvasTexture(canvas);
+            return texture;
+        }
+
+        // Create particles
+        const particleCount = 500;
+        const particles = [];
+
+        // Create maple leaf particles
+        const leafTexture = createShapeTexture(true);
+        const leafMaterial = new THREE.SpriteMaterial({
+            map: leafTexture,
+            transparent: true,
+            opacity: 0.8
+        });
+
+        for (let i = 0; i < particleCount / 2; i++) {
+            const sprite = new THREE.Sprite(leafMaterial.clone());
+            sprite.position.set(
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 20
+            );
+            sprite.scale.set(0.3 + Math.random() * 0.2, 0.3 + Math.random() * 0.2, 1);
+            sprite.userData = {
+                velocity: new THREE.Vector3(
+                    (Math.random() - 0.5) * 0.01,
+                    (Math.random() - 0.5) * 0.01,
+                    (Math.random() - 0.5) * 0.01
+                ),
+                rotationSpeed: (Math.random() - 0.5) * 0.02
+            };
+            scene.add(sprite);
+            particles.push(sprite);
+        }
+
+        // Create star particles
+        const starTexture = createShapeTexture(false);
+        const starMaterial = new THREE.SpriteMaterial({
+            map: starTexture,
+            transparent: true,
+            opacity: 0.8
+        });
+
+        for (let i = 0; i < particleCount / 2; i++) {
+            const sprite = new THREE.Sprite(starMaterial.clone());
+            sprite.position.set(
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 20
+            );
+            sprite.scale.set(0.2 + Math.random() * 0.15, 0.2 + Math.random() * 0.15, 1);
+            sprite.userData = {
+                velocity: new THREE.Vector3(
+                    (Math.random() - 0.5) * 0.01,
+                    (Math.random() - 0.5) * 0.01,
+                    (Math.random() - 0.5) * 0.01
+                ),
+                rotationSpeed: (Math.random() - 0.5) * 0.03
+            };
+            scene.add(sprite);
+            particles.push(sprite);
+        }
+
+        camera.position.z = 5;
+
+        // Mouse movement effect
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotate entire scene based on mouse
+            scene.rotation.y += (mouseX * 0.5 - scene.rotation.y) * 0.05;
+            scene.rotation.x += (mouseY * 0.3 - scene.rotation.x) * 0.05;
+
+            // Animate individual particles
+            particles.forEach(particle => {
+                particle.position.add(particle.userData.velocity);
+                particle.material.rotation += particle.userData.rotationSpeed;
+
+                // Wrap around
+                if (particle.position.x > 10) particle.position.x = -10;
+                if (particle.position.x < -10) particle.position.x = 10;
+                if (particle.position.y > 10) particle.position.y = -10;
+                if (particle.position.y < -10) particle.position.y = 10;
+                if (particle.position.z > 10) particle.position.z = -10;
+                if (particle.position.z < -10) particle.position.z = 10;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // ============================================
+        // 3D ROTATING COIN
+        // ============================================
+        const coinCanvas = document.getElementById('coin-canvas');
+        const coinScene = new THREE.Scene();
+        const coinCamera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);
+        const coinRenderer = new THREE.WebGLRenderer({ canvas: coinCanvas, alpha: true, antialias: true });
+        coinRenderer.setSize(250, 250);
+        coinRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Create coin textures
+        function createCoinFaceTexture(isMaple) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+
+            // Gold gradient background
+            const gradient = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+            gradient.addColorStop(0, '#FFD700');
+            gradient.addColorStop(0.7, '#FFA500');
+            gradient.addColorStop(1, '#B8860B');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(128, 128, 120, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Inner circle
+            ctx.strokeStyle = '#8B4513';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(128, 128, 100, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Symbol
+            ctx.font = 'bold 100px serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = isMaple ? '#DE2910' : '#DE2910';
+            ctx.fillText(isMaple ? '🍁' : '⭐', 128, 118);
+
+            // Text
+            ctx.font = 'bold 20px Orbitron, sans-serif';
+            ctx.fillStyle = '#8B4513';
+            ctx.fillText('CHINADA', 128, 200);
+
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        // Create coin geometry
+        const coinGeometry = new THREE.CylinderGeometry(1.5, 1.5, 0.15, 64);
+
+        // Create materials for coin
+        const coinMaterials = [
+            new THREE.MeshStandardMaterial({ // Side
+                color: 0xFFD700,
+                metalness: 0.9,
+                roughness: 0.2,
+            }),
+            new THREE.MeshStandardMaterial({ // Top (maple)
+                map: createCoinFaceTexture(true),
+                metalness: 0.7,
+                roughness: 0.3,
+            }),
+            new THREE.MeshStandardMaterial({ // Bottom (stars)
+                map: createCoinFaceTexture(false),
+                metalness: 0.7,
+                roughness: 0.3,
+            })
+        ];
+
+        // Apply materials
+        const coin = new THREE.Mesh(coinGeometry, coinMaterials);
+        coin.rotation.x = Math.PI / 2;
+        coinScene.add(coin);
+
+        // Add rim detail
+        const rimGeometry = new THREE.TorusGeometry(1.5, 0.05, 8, 64);
+        const rimMaterial = new THREE.MeshStandardMaterial({
+            color: 0xB8860B,
+            metalness: 0.9,
+            roughness: 0.1,
+        });
+        const rim = new THREE.Mesh(rimGeometry, rimMaterial);
+        coin.add(rim);
+
+        // Lighting for coin
+        const coinAmbient = new THREE.AmbientLight(0xffffff, 0.5);
+        coinScene.add(coinAmbient);
+
+        const coinLight1 = new THREE.DirectionalLight(0xffffff, 1);
+        coinLight1.position.set(5, 5, 5);
+        coinScene.add(coinLight1);
+
+        const coinLight2 = new THREE.DirectionalLight(0xFFD700, 0.5);
+        coinLight2.position.set(-5, -5, 5);
+        coinScene.add(coinLight2);
+
+        coinCamera.position.z = 4;
+
+        // Coin animation
+        let coinRotationSpeed = 0.01;
+        let coinTargetSpeed = 0.01;
+
+        function animateCoin() {
+            requestAnimationFrame(animateCoin);
+
+            coinRotationSpeed += (coinTargetSpeed - coinRotationSpeed) * 0.1;
+            coin.rotation.z += coinRotationSpeed;
+
+            coinRenderer.render(coinScene, coinCamera);
+        }
+
+        animateCoin();
+
+        // Coin hover interaction
+        const coinContainer = document.querySelector('.coin-container');
+
+        coinContainer.addEventListener('mouseenter', () => {
+            coinTargetSpeed = 0.05;
+        });
+
+        coinContainer.addEventListener('mouseleave', () => {
+            coinTargetSpeed = 0.01;
+        });
+
+        coinContainer.addEventListener('click', () => {
+            coinTargetSpeed = 0.3;
+            setTimeout(() => {
+                coinTargetSpeed = 0.01;
+            }, 2000);
+
+            // Confetti on click
+            confetti({
+                particleCount: 30,
+                spread: 60,
+                origin: { y: 0.3, x: 0.5 },
+                colors: ['#DE2910', '#FFD700']
+            });
+        });
+
+        // ============================================
+        // HANDLE RESIZE
+        // ============================================
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // ============================================
+        // MEME GALLERY SCROLL
+        // ============================================
+        const memeGallery = document.getElementById('memeGallery');
+        let isGalleryDown = false;
+        let startX;
+        let scrollLeft;
+
+        memeGallery.addEventListener('mousedown', (e) => {
+            isGalleryDown = true;
+            startX = e.pageX - memeGallery.offsetLeft;
+            scrollLeft = memeGallery.scrollLeft;
+        });
+
+        memeGallery.addEventListener('mouseleave', () => {
+            isGalleryDown = false;
+        });
+
+        memeGallery.addEventListener('mouseup', () => {
+            isGalleryDown = false;
+        });
+
+        memeGallery.addEventListener('mousemove', (e) => {
+            if (!isGalleryDown) return;
+            e.preventDefault();
+            const x = e.pageX - memeGallery.offsetLeft;
+            const walk = (x - startX) * 2;
+            memeGallery.scrollLeft = scrollLeft - walk;
+        });
+
+        // ============================================
+        // BUTTON HOVER SOUND
+        // ============================================
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                playSound('hover');
+            });
+        });
+
+        // ============================================
+        // COUNTER ANIMATION
+        // ============================================
+        function animateCounter(element, target, prefix = '', suffix = '') {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = prefix + Math.floor(current).toLocaleString() + suffix;
+            }, 30);
+        }
+
+        // Mock data animation (replace with real API calls)
+        setTimeout(() => {
+            animateCounter(document.getElementById('holders'), 1337);
+            animateCounter(document.getElementById('mcap'), 69420, '$');
+            animateCounter(document.getElementById('volume'), 42069, '$');
+        }, 2000);
+
+        // ============================================
+        // MEME GALLERY NAVIGATION
+        // ============================================
+        function scrollGallery(direction) {
+            const gallery = document.getElementById('memeGallery');
+            const cardWidth = 350; // card width + gap
+            gallery.scrollBy({
+                left: direction * cardWidth * 2,
+                behavior: 'smooth'
+            });
+        }
+
+        // Keyboard navigation for gallery
+        document.addEventListener('keydown', (e) => {
+            const memeSection = document.getElementById('memes');
+            const rect = memeSection.getBoundingClientRect();
+            const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+
+            if (isVisible) {
+                if (e.key === 'ArrowLeft') scrollGallery(-1);
+                if (e.key === 'ArrowRight') scrollGallery(1);
+            }
+        });
+
+        // ============================================
+        // MEME DOWNLOAD & SHARE
+        // ============================================
+        function downloadMeme(filename) {
+            const link = document.createElement('a');
+            link.href = 'images/' + filename;
+            link.download = 'CHINADA-' + filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Confetti celebration
+            confetti({
+                particleCount: 50,
+                spread: 60,
+                origin: { y: 0.7 },
+                colors: ['#DE2910', '#FFD700']
+            });
+        }
+
+        function shareMeme(title) {
+            const shareText = `Check out this ${title} meme from $CHINADA! 🍁⭐ The meme that diplomacy created. #CHINADA #Solana`;
+            const shareUrl = window.location.href;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'CHINADA Meme: ' + title,
+                    text: shareText,
+                    url: shareUrl
+                }).catch(console.error);
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(shareText + ' ' + shareUrl).then(() => {
+                    alert('Share text copied to clipboard!');
+                });
+            }
+        }
+
+        console.log('%c🍁 CHINADA 🍁', 'font-size: 30px; color: #FFD700; text-shadow: 2px 2px #DE2910;');
+        console.log('%cWelcome to the meme that diplomacy created!', 'font-size: 14px; color: #DE2910;');
+        console.log('%cTry the Konami code: ↑↑↓↓←→←→BA', 'font-size: 12px; color: #888;');
+    </script>
+</body>
+</html>

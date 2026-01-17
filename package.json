@@ -1,0 +1,9 @@
+{
+  "name": "chinada-website",
+  "version": "1.0.0",
+  "description": "CHINADA memecoin landing page",
+  "scripts": {
+    "dev": "npx serve .",
+    "preview": "npx serve ."
+  }
+}
