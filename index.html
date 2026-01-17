@@ -744,18 +744,19 @@
             color: white;
             box-shadow: 0 10px 40px rgba(222, 41, 16, 0.4);
             border: none;
-            animation: btnPulse 2s ease-in-out infinite;
+            animation: btnGlow 2s ease-in-out infinite;
         }
 
-        @keyframes btnPulse {
+        @keyframes btnGlow {
             0%, 100% { box-shadow: 0 10px 40px rgba(222, 41, 16, 0.4); }
-            50% { box-shadow: 0 10px 60px rgba(222, 41, 16, 0.6); }
+            50% { box-shadow: 0 10px 60px rgba(222, 41, 16, 0.7), 0 0 30px rgba(255, 215, 0, 0.3); }
         }
 
         .btn-primary:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(222, 41, 16, 0.6);
-            animation: shake 0.5s;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 60px rgba(222, 41, 16, 0.6), 0 0 40px rgba(255, 215, 0, 0.4);
+            animation: none;
+            filter: brightness(1.1);
         }
 
         .btn-gold {
